@@ -5,7 +5,6 @@ const { Meta } = Card;
 const PostCard = ({ post }) => (
   <>
     <Card
-      hoverable
       style={{
         width: 240,
         height: 200,
@@ -44,9 +43,12 @@ const PostCard = ({ post }) => (
         style={{
           margin: "0.1rem 0",
           padding: "1rem 0",
+          cursor: "pointer",
         }}
+        title="Comment on post"
+        onClick={() => console.log("Click")}
       >
-        <MessageOutlined />{" "}
+        <MessageOutlined title="Comment on post" />{" "}
         {post.comments.length > 0 ? post.comments.length : "No comments"}
       </div>
     </Card>

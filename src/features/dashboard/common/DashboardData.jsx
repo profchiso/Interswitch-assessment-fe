@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { UserOutlined } from "@ant-design/icons";
-import { Avatar, Table, Input, theme } from "antd";
+import { Avatar, Table, Input, theme, Popover } from "antd";
 
 const DashboardContent = ({
   title,
@@ -12,6 +12,17 @@ const DashboardContent = ({
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+  const text = <span></span>;
+  const content = (
+    <div
+      onClick={() => {
+        sessionStorage.clear();
+      }}
+      style={{ cursor: "pointer" }}
+    >
+      <p>Logout</p>
+    </div>
+  );
   return (
     <>
       <div
@@ -26,7 +37,9 @@ const DashboardContent = ({
       >
         <div>{title}</div>
         <div>
-          <Avatar size="middle" icon={<UserOutlined />} />
+          <Popover placement="leftBottom" title={text} content={content}>
+            <Avatar size="middle" icon={<UserOutlined />} />
+          </Popover>
         </div>
       </div>
 

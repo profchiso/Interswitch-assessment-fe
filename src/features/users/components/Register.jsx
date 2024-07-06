@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { Flex, Input, Button, App } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   MailOutlined,
   EyeInvisibleOutlined,
@@ -10,23 +11,63 @@ import AuthLayout from "./common/Layout";
 
 const Register = () => {
   const { notification } = App.useApp();
-  // const navigate = useNavigate();
-  const handleRegister = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const handleRegister = async () => {
+    if (!name || !email || !password) {
+      notification.error({
+        message: "Registration",
+        placement: "top",
+        description: "All fields are required",
+      });
+
+      return;
+    }
+    const res = await fetch("http://localhost:5001/api/v1/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, email, password }),
+    });
+    const jsonData = await res.json();
+    console.log(jsonData);
+    if (jsonData.responseText === "FAIL") {
+      notification.error({
+        message: "Registration",
+        placement: "top",
+        description: jsonData.errors[0].msg,
+      });
+      return;
+    }
+
     notification.success({
       message: "Registration",
       placement: "top",
-      description: "Your registration is successfully ",
+      description: jsonData.data.msg,
     });
-    // navigate("/");
+    navigate("/");
   };
   return (
     <AuthLayout>
       <Flex vertical gap="middle">
         <Flex>
-          <Input placeholder="Enter name" prefix={<UserOutlined />} />
+          <Input
+            placeholder="Enter name"
+            prefix={<UserOutlined />}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
         </Flex>
         <Flex>
-          <Input placeholder="Enter email" prefix={<MailOutlined />} />
+          <Input
+            placeholder="Enter email"
+            prefix={<MailOutlined />}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </Flex>
         <Flex>
           <Input.Password
@@ -34,6 +75,8 @@ const Register = () => {
             iconRender={(visible) =>
               visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
             }
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </Flex>
         <Flex>
