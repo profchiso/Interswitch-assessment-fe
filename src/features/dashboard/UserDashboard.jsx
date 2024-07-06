@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { WechatOutlined, TeamOutlined } from "@ant-design/icons";
@@ -85,7 +86,7 @@ const items = [
   getItem(<Link to={"/dashboard/users"}>Users</Link>, "1", <TeamOutlined />),
   getItem(<Link to={"/dashboard/posts"}>posts</Link>, "2", <WechatOutlined />),
 ];
-const Dashboard = () => {
+const UserDashboard = (props) => {
   const [collapsed, setCollapsed] = useState(false);
 
   const onSearch = (value, _e, info) => console.log(info?.source, value);
@@ -128,6 +129,7 @@ const Dashboard = () => {
           }}
         >
           <DashboardData
+            setIsAuthenticated={props.setIsAuthenticated}
             title={"Users"}
             columns={columns}
             dataSource={dataSource}
@@ -147,4 +149,4 @@ const Dashboard = () => {
     </Layout>
   );
 };
-export default Dashboard;
+export default UserDashboard;

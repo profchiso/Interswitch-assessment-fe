@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
-import { UserOutlined } from "@ant-design/icons";
-import { Avatar, Table, Input, theme, Popover } from "antd";
+
+import { Table, Input, theme } from "antd";
+import Logout from "./Logout";
 
 const DashboardContent = ({
   title,
@@ -8,40 +9,15 @@ const DashboardContent = ({
   dataSource,
   onChange,
   onSearch,
+  setIsAuthenticated,
 }) => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-  const text = <span></span>;
-  const content = (
-    <div
-      onClick={() => {
-        sessionStorage.clear();
-      }}
-      style={{ cursor: "pointer" }}
-    >
-      <p>Logout</p>
-    </div>
-  );
+
   return (
     <>
-      <div
-        style={{
-          padding: 24,
-          marginRight: 10,
-          background: colorBgContainer,
-          borderRadius: borderRadiusLG,
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-      >
-        <div>{title}</div>
-        <div>
-          <Popover placement="leftBottom" title={text} content={content}>
-            <Avatar size="middle" icon={<UserOutlined />} />
-          </Popover>
-        </div>
-      </div>
+      <Logout title={title} setIsAuthenticated={setIsAuthenticated} />
 
       <div
         style={{

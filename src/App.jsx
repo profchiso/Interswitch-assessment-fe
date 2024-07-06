@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./features/users/components/Login";
@@ -12,10 +12,18 @@ function InterswitchApp() {
   const [isAuthenticated, setIsAuthenticated] = useState(
     JSON.parse(sessionStorage.getItem("isAuthenticated"))
   );
+  useEffect(() => {
+    const auth = JSON.parse(sessionStorage.getItem("isAuthenticated"));
+    setIsAuthenticated(auth);
+  }, []);
   return (
     <BrowserRouter>
       <Routes>
-        <Route exact path="/" element={<Login />} />
+        <Route
+          exact
+          path="/"
+          element={<Login setIsAuthenticated={setIsAuthenticated} />}
+        />
         <Route exact path="/register" element={<Register />} />
         <Route
           exact
@@ -23,6 +31,7 @@ function InterswitchApp() {
           element={
             <PrivateRoute
               isAuthenticated={isAuthenticated}
+              setIsAuthenticated={setIsAuthenticated}
               element={UserDashboard}
             />
           }
@@ -33,6 +42,7 @@ function InterswitchApp() {
           element={
             <PrivateRoute
               isAuthenticated={isAuthenticated}
+              setIsAuthenticated={setIsAuthenticated}
               element={PostDashboard}
             />
           }

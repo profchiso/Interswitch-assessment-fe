@@ -1,9 +1,11 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { WechatOutlined, TeamOutlined, UserOutlined } from "@ant-design/icons";
-import { Layout, Menu, Flex, Image, Row, Col, Avatar, theme } from "antd";
+import { WechatOutlined, TeamOutlined } from "@ant-design/icons";
+import { Layout, Menu, Flex, Image, Row, Col } from "antd";
 import AuthFooter from "../users/components/common/Footer";
 import PostCard from "./PostCard";
+import Logout from "./common/Logout";
 import Logo from "../../assets/react.svg";
 const { Content, Footer, Sider } = Layout;
 
@@ -188,11 +190,8 @@ const items = [
   getItem(<Link to={"/dashboard/users"}>Users</Link>, "1", <TeamOutlined />),
   getItem(<Link to={"/dashboard/posts"}>posts</Link>, "2", <WechatOutlined />),
 ];
-const Dashboard = () => {
+const Dashboard = (props) => {
   const [collapsed, setCollapsed] = useState(false);
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
 
   const chunkedDataSource = [];
   for (let i = 0; i < dataSource.length; i += 4) {
@@ -233,21 +232,10 @@ const Dashboard = () => {
             margin: "16px ",
           }}
         >
-          <div
-            style={{
-              padding: 24,
-              marginRight: 10,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <div>Posts</div>
-            <div>
-              <Avatar size="middle" icon={<UserOutlined />} />
-            </div>
-          </div>
+          <Logout
+            title={"Posts"}
+            setIsAuthenticated={props.setIsAuthenticated}
+          />
 
           {chunkedDataSource.map((chunk, index) => (
             <Row key={index} gutter={[16, 16]} style={{ margin: "16px 0" }}>
