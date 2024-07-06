@@ -1,13 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  MessageOutlined,
-  WechatOutlined,
-  TeamOutlined,
-} from "@ant-design/icons";
-import { Layout, Menu, Flex, Image } from "antd";
+import { WechatOutlined, TeamOutlined, UserOutlined } from "@ant-design/icons";
+import { Layout, Menu, Flex, Image, Row, Col, Avatar, theme } from "antd";
 import AuthFooter from "../users/components/common/Footer";
-import DashboardData from "./common/DashboardData";
+import PostCard from "./PostCard";
 import Logo from "../../assets/react.svg";
 const { Content, Footer, Sider } = Layout;
 
@@ -16,7 +12,16 @@ const dataSource = [
     key: "1",
     title: "first post",
     body: "First post body",
-    user: { name: "Ken", email: "Ken" },
+    user: { name: "Ken ben", email: "Ken" },
+    comments: [],
+    createdAt: "10/10/2024",
+  },
+
+  {
+    key: "1",
+    title: "2nd post",
+    body: "2nd post body",
+    user: { name: "Chinedu okorie", email: "Ken" },
     comments: [
       { body: "comment2" },
       { body: "comment1" },
@@ -24,7 +29,18 @@ const dataSource = [
     ],
     createdAt: "10/10/2024",
   },
-
+  {
+    key: "1",
+    title: "2nd post",
+    body: "2nd post body mammammmamm ammamamm",
+    user: { name: "Mary Jane", email: "Ken" },
+    comments: [
+      { body: "comment2" },
+      { body: "comment1" },
+      { body: "comment3" },
+    ],
+    createdAt: "10/10/2024",
+  },
   {
     key: "1",
     title: "2nd post",
@@ -37,39 +53,125 @@ const dataSource = [
     ],
     createdAt: "10/10/2024",
   },
-];
-
-const columns = [
   {
-    title: "Title",
-    dataIndex: "title",
-    key: "title",
-    sorter: (a, b) => a.title - b.title,
+    key: "1",
+    title: "2nd post",
+    body: "2nd post body",
+    user: { name: "Ken", email: "Ken" },
+    comments: [
+      { body: "comment2" },
+      { body: "comment1" },
+      { body: "comment3" },
+    ],
+    createdAt: "10/10/2024",
   },
   {
-    title: "Body",
-    dataIndex: "body",
-    key: "body",
-    sorter: (a, b) => a.body - b.body,
+    key: "1",
+    title: "2nd post",
+    body: "2nd post body",
+    user: { name: "Ken", email: "Ken" },
+    comments: [
+      { body: "comment2" },
+      { body: "comment1" },
+      { body: "comment3" },
+    ],
+    createdAt: "10/10/2024",
   },
   {
-    title: "User",
-    dataIndex: "user",
-    key: "user",
-    render: (user) => <span>{user.name}</span>,
-    sorter: (a, b) => a.user.name - b.user.name,
+    key: "1",
+    title: "2nd post",
+    body: "2nd post body",
+    user: { name: "Ken", email: "Ken" },
+    comments: [
+      { body: "comment2" },
+      { body: "comment1" },
+      { body: "comment3" },
+    ],
+    createdAt: "10/10/2024",
   },
   {
-    title: "No Of Comments",
-    dataIndex: "comments",
-    key: "comment",
-    render: (comments) => <span>{comments.length}</span>,
-    sorter: (a, b) => a.user.name - b.user.name,
+    key: "1",
+    title: "2nd post",
+    body: "2nd post body",
+    user: { name: "Ken", email: "Ken" },
+    comments: [
+      { body: "comment2" },
+      { body: "comment1" },
+      { body: "comment3" },
+    ],
+    createdAt: "10/10/2024",
   },
   {
-    title: "Created Date",
-    dataIndex: "createdAt",
-    key: "createdAt",
+    key: "1",
+    title: "2nd post",
+    body: "2nd post body",
+    user: { name: "Ken", email: "Ken" },
+    comments: [
+      { body: "comment2" },
+      { body: "comment1" },
+      { body: "comment3" },
+    ],
+    createdAt: "10/10/2024",
+  },
+  {
+    key: "1",
+    title: "2nd post",
+    body: "2nd post body",
+    user: { name: "Ken", email: "Ken" },
+    comments: [
+      { body: "comment2" },
+      { body: "comment1" },
+      { body: "comment3" },
+    ],
+    createdAt: "10/10/2024",
+  },
+  {
+    key: "1",
+    title: "2nd post",
+    body: "2nd post body",
+    user: { name: "Ken", email: "Ken" },
+    comments: [
+      { body: "comment2" },
+      { body: "comment1" },
+      { body: "comment3" },
+    ],
+    createdAt: "10/10/2024",
+  },
+  {
+    key: "1",
+    title: "2nd post",
+    body: "2nd post body",
+    user: { name: "Ken", email: "Ken" },
+    comments: [
+      { body: "comment2" },
+      { body: "comment1" },
+      { body: "comment3" },
+    ],
+    createdAt: "10/10/2024",
+  },
+  {
+    key: "1",
+    title: "2nd post",
+    body: "2nd post body",
+    user: { name: "Ken", email: "Ken" },
+    comments: [
+      { body: "comment2" },
+      { body: "comment1" },
+      { body: "comment3" },
+    ],
+    createdAt: "10/10/2024",
+  },
+  {
+    key: "1",
+    title: "2nd post",
+    body: "2nd post body",
+    user: { name: "Ken", email: "Ken" },
+    comments: [
+      { body: "comment2" },
+      { body: "comment1" },
+      { body: "comment3" },
+    ],
+    createdAt: "10/10/2024",
   },
 ];
 
@@ -85,19 +187,17 @@ function getItem(label, key, icon, children) {
 const items = [
   getItem(<Link to={"/dashboard/users"}>Users</Link>, "1", <TeamOutlined />),
   getItem(<Link to={"/dashboard/posts"}>posts</Link>, "2", <WechatOutlined />),
-  getItem(
-    <Link to={"/dashboard/comments"}>Comments</Link>,
-    "3",
-    <MessageOutlined />
-  ),
 ];
 const Dashboard = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
 
-  const onSearch = (value, _e, info) => console.log(info?.source, value);
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log("params", pagination, filters, sorter, extra);
-  };
+  const chunkedDataSource = [];
+  for (let i = 0; i < dataSource.length; i += 4) {
+    chunkedDataSource.push(dataSource.slice(i, i + 4));
+  }
   return (
     <Layout
       style={{
@@ -133,13 +233,31 @@ const Dashboard = () => {
             margin: "16px ",
           }}
         >
-          <DashboardData
-            title={"Posts"}
-            columns={columns}
-            dataSource={dataSource}
-            onChange={onChange}
-            onSearch={onSearch}
-          />
+          <div
+            style={{
+              padding: 24,
+              marginRight: 10,
+              background: colorBgContainer,
+              borderRadius: borderRadiusLG,
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <div>Posts</div>
+            <div>
+              <Avatar size="middle" icon={<UserOutlined />} />
+            </div>
+          </div>
+
+          {chunkedDataSource.map((chunk, index) => (
+            <Row key={index} gutter={[16, 16]} style={{ margin: "16px 0" }}>
+              {chunk.map((post) => (
+                <Col key={post.key} className="gutter-row" span={6}>
+                  <PostCard key={post.key} post={post} />
+                </Col>
+              ))}
+            </Row>
+          ))}
         </Content>
 
         <Footer

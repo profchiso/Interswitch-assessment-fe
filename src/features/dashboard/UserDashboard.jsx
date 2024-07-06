@@ -1,10 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  MessageOutlined,
-  WechatOutlined,
-  TeamOutlined,
-} from "@ant-design/icons";
+import { WechatOutlined, TeamOutlined } from "@ant-design/icons";
 import { Layout, Menu, Flex, Image } from "antd";
 import AuthFooter from "../users/components/common/Footer";
 import DashboardData from "./common/DashboardData";
@@ -88,11 +84,6 @@ function getItem(label, key, icon, children) {
 const items = [
   getItem(<Link to={"/dashboard/users"}>Users</Link>, "1", <TeamOutlined />),
   getItem(<Link to={"/dashboard/posts"}>posts</Link>, "2", <WechatOutlined />),
-  getItem(
-    <Link to={"/dashboard/comments"}>Comments</Link>,
-    "3",
-    <MessageOutlined />
-  ),
 ];
 const Dashboard = () => {
   const [collapsed, setCollapsed] = useState(false);

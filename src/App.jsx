@@ -3,7 +3,6 @@ import { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./features/users/components/Login";
 import Register from "./features/users/components/Register";
-import Dashboard from "./features/dashboard";
 import UserDashboard from "./features/dashboard/UserDashboard";
 import PostDashboard from "./features/dashboard/PostDashboard";
 import PrivateRoute from "./features/dashboard/common/PrivateRoute";
@@ -35,16 +34,6 @@ function InterswitchApp() {
             <PrivateRoute
               isAuthenticated={isAuthenticated}
               element={PostDashboard}
-            />
-          }
-        />
-        <Route
-          exact
-          path="/dashboard/comments"
-          element={
-            <PrivateRoute
-              isAuthenticated={isAuthenticated}
-              element={Dashboard}
             />
           }
         />
