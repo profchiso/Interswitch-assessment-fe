@@ -30,7 +30,7 @@ const PostCard = ({ post }) => (
           paddingBottom: "10px",
         }}
       >
-        {post.user.name.split(" ")[0]}
+        {post.user.name.split(" ")[0] || ""}
       </div>
       <Meta
         title={post.title}

@@ -1,181 +1,15 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { WechatOutlined, TeamOutlined } from "@ant-design/icons";
 import { Layout, Menu, Flex, Image, Row, Col } from "antd";
 import AuthFooter from "../users/components/common/Footer";
 import PostCard from "./PostCard";
 import Logout from "./common/Logout";
 import Logo from "../../assets/react.svg";
+
 const { Content, Footer, Sider } = Layout;
-
-const dataSource = [
-  {
-    key: "1",
-    title: "first post",
-    body: "First post body",
-    user: { name: "Ken ben", email: "Ken" },
-    comments: [],
-    createdAt: "10/10/2024",
-  },
-
-  {
-    key: "1",
-    title: "2nd post",
-    body: "2nd post body",
-    user: { name: "Chinedu okorie", email: "Ken" },
-    comments: [
-      { body: "comment2" },
-      { body: "comment1" },
-      { body: "comment3" },
-    ],
-    createdAt: "10/10/2024",
-  },
-  {
-    key: "1",
-    title: "2nd post",
-    body: "2nd post body mammammmamm ammamamm",
-    user: { name: "Mary Jane", email: "Ken" },
-    comments: [
-      { body: "comment2" },
-      { body: "comment1" },
-      { body: "comment3" },
-    ],
-    createdAt: "10/10/2024",
-  },
-  {
-    key: "1",
-    title: "2nd post",
-    body: "2nd post body",
-    user: { name: "Ken", email: "Ken" },
-    comments: [
-      { body: "comment2" },
-      { body: "comment1" },
-      { body: "comment3" },
-    ],
-    createdAt: "10/10/2024",
-  },
-  {
-    key: "1",
-    title: "2nd post",
-    body: "2nd post body",
-    user: { name: "Ken", email: "Ken" },
-    comments: [
-      { body: "comment2" },
-      { body: "comment1" },
-      { body: "comment3" },
-    ],
-    createdAt: "10/10/2024",
-  },
-  {
-    key: "1",
-    title: "2nd post",
-    body: "2nd post body",
-    user: { name: "Ken", email: "Ken" },
-    comments: [
-      { body: "comment2" },
-      { body: "comment1" },
-      { body: "comment3" },
-    ],
-    createdAt: "10/10/2024",
-  },
-  {
-    key: "1",
-    title: "2nd post",
-    body: "2nd post body",
-    user: { name: "Ken", email: "Ken" },
-    comments: [
-      { body: "comment2" },
-      { body: "comment1" },
-      { body: "comment3" },
-    ],
-    createdAt: "10/10/2024",
-  },
-  {
-    key: "1",
-    title: "2nd post",
-    body: "2nd post body",
-    user: { name: "Ken", email: "Ken" },
-    comments: [
-      { body: "comment2" },
-      { body: "comment1" },
-      { body: "comment3" },
-    ],
-    createdAt: "10/10/2024",
-  },
-  {
-    key: "1",
-    title: "2nd post",
-    body: "2nd post body",
-    user: { name: "Ken", email: "Ken" },
-    comments: [
-      { body: "comment2" },
-      { body: "comment1" },
-      { body: "comment3" },
-    ],
-    createdAt: "10/10/2024",
-  },
-  {
-    key: "1",
-    title: "2nd post",
-    body: "2nd post body",
-    user: { name: "Ken", email: "Ken" },
-    comments: [
-      { body: "comment2" },
-      { body: "comment1" },
-      { body: "comment3" },
-    ],
-    createdAt: "10/10/2024",
-  },
-  {
-    key: "1",
-    title: "2nd post",
-    body: "2nd post body",
-    user: { name: "Ken", email: "Ken" },
-    comments: [
-      { body: "comment2" },
-      { body: "comment1" },
-      { body: "comment3" },
-    ],
-    createdAt: "10/10/2024",
-  },
-  {
-    key: "1",
-    title: "2nd post",
-    body: "2nd post body",
-    user: { name: "Ken", email: "Ken" },
-    comments: [
-      { body: "comment2" },
-      { body: "comment1" },
-      { body: "comment3" },
-    ],
-    createdAt: "10/10/2024",
-  },
-  {
-    key: "1",
-    title: "2nd post",
-    body: "2nd post body",
-    user: { name: "Ken", email: "Ken" },
-    comments: [
-      { body: "comment2" },
-      { body: "comment1" },
-      { body: "comment3" },
-    ],
-    createdAt: "10/10/2024",
-  },
-  {
-    key: "1",
-    title: "2nd post",
-    body: "2nd post body",
-    user: { name: "Ken", email: "Ken" },
-    comments: [
-      { body: "comment2" },
-      { body: "comment1" },
-      { body: "comment3" },
-    ],
-    createdAt: "10/10/2024",
-  },
-];
 
 function getItem(label, key, icon, children) {
   return {
@@ -190,13 +24,37 @@ const items = [
   getItem(<Link to={"/dashboard/users"}>Users</Link>, "1", <TeamOutlined />),
   getItem(<Link to={"/dashboard/posts"}>posts</Link>, "2", <WechatOutlined />),
 ];
-const Dashboard = (props) => {
+const PostDashboard = (props) => {
   const [collapsed, setCollapsed] = useState(false);
 
+  const fetchPosts = async () => {
+    const res = await fetch("http://localhost:5001/api/v1/posts", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
+      },
+    });
+    const posts = await res.json();
+
+    return posts;
+  };
+
+  const { data: posts, isFetched } = useQuery({
+    queryKey: ["posts"],
+    queryFn: fetchPosts,
+  });
+  console.log(posts);
   const chunkedDataSource = [];
-  for (let i = 0; i < dataSource.length; i += 4) {
-    chunkedDataSource.push(dataSource.slice(i, i + 4));
+  if (isFetched) {
+    for (let i = 0; i < posts.resource.length; i += 4) {
+      chunkedDataSource.push(posts.resource.slice(i, i + 4));
+    }
   }
+  useEffect(() => {
+    fetchPosts();
+  }, [posts]);
+
   return (
     <Layout
       style={{
@@ -259,4 +117,4 @@ const Dashboard = (props) => {
     </Layout>
   );
 };
-export default Dashboard;
+export default PostDashboard;

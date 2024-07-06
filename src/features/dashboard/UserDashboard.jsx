@@ -3,55 +3,12 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { WechatOutlined, TeamOutlined } from "@ant-design/icons";
 import { Layout, Menu, Flex, Image } from "antd";
+import { useQuery } from "@tanstack/react-query";
 import AuthFooter from "../users/components/common/Footer";
 import DashboardData from "./common/DashboardData";
 import Logo from "../../assets/react.svg";
-const { Content, Footer, Sider } = Layout;
 
-const dataSource = [
-  {
-    key: "1",
-    name: "Mike",
-    email: "email1@gmail.com",
-    createdAt: "10/10/2024",
-  },
-  {
-    key: "2",
-    name: "Ken",
-    email: "email1@gmail.com",
-    createdAt: "10/10/2024",
-  },
-  {
-    key: "3",
-    name: "Ken",
-    email: "email1@gmail.com",
-    createdAt: "10/10/2024",
-  },
-  {
-    key: "4",
-    name: "Ken",
-    email: "email1@gmail.com",
-    createdAt: "10/10/2024",
-  },
-  {
-    key: "5",
-    name: "Ken",
-    email: "email1@gmail.com",
-    createdAt: "10/10/2024",
-  },
-  {
-    key: "6",
-    name: "Ken",
-    email: "email1@gmail.com",
-    createdAt: "10/10/2024",
-  },
-  {
-    key: "7",
-    name: "Ken",
-    email: "email1@gmail.com",
-    createdAt: "10/10/2024",
-  },
-];
+const { Content, Footer, Sider } = Layout;
 
 const columns = [
   {
@@ -88,6 +45,24 @@ const items = [
 ];
 const UserDashboard = (props) => {
   const [collapsed, setCollapsed] = useState(false);
+
+  const fetchusers = async () => {
+    const res = await fetch("http://localhost:5001/api/v1/users", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
+      },
+    });
+    const users = await res.json();
+
+    return users;
+  };
+
+  const { data: users, isFetched } = useQuery({
+    queryKey: ["posts"],
+    queryFn: fetchusers,
+  });
 
   const onSearch = (value, _e, info) => console.log(info?.source, value);
   const onChange = (pagination, filters, sorter, extra) => {
@@ -132,7 +107,7 @@ const UserDashboard = (props) => {
             setIsAuthenticated={props.setIsAuthenticated}
             title={"Users"}
             columns={columns}
-            dataSource={dataSource}
+            dataSource={isFetched ? users?.resource : []}
             onChange={onChange}
             onSearch={onSearch}
           />
