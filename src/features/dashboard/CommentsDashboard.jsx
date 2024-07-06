@@ -58,15 +58,15 @@ const dataSource = [
 
 const columns = [
   {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
+    title: "Title",
+    dataIndex: "title",
+    key: "title",
     sorter: (a, b) => a.name - b.name,
   },
   {
-    title: "Email",
-    dataIndex: "email",
-    key: "email",
+    title: "Body",
+    dataIndex: "body",
+    key: "body",
     sorter: (a, b) => a.email - b.email,
   },
   {
