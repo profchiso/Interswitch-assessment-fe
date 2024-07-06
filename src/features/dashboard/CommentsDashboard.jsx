@@ -137,7 +137,7 @@ const Dashboard = () => {
           }}
         >
           <DashboardData
-            title={"user"}
+            title={"Comments"}
             columns={columns}
             dataSource={dataSource}
             onChange={onChange}

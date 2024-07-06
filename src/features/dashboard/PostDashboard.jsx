@@ -14,60 +14,57 @@ const { Content, Footer, Sider } = Layout;
 const dataSource = [
   {
     key: "1",
-    name: "Mike",
-    email: "email1@gmail.com",
+    title: "first post",
+    body: "First post body",
+    user: { name: "Ken", email: "Ken" },
+    comments: [
+      { body: "comment2" },
+      { body: "comment1" },
+      { body: "comment3" },
+    ],
     createdAt: "10/10/2024",
   },
+
   {
-    key: "2",
-    name: "Ken",
-    email: "email1@gmail.com",
-    createdAt: "10/10/2024",
-  },
-  {
-    key: "3",
-    name: "Ken",
-    email: "email1@gmail.com",
-    createdAt: "10/10/2024",
-  },
-  {
-    key: "4",
-    name: "Ken",
-    email: "email1@gmail.com",
-    createdAt: "10/10/2024",
-  },
-  {
-    key: "5",
-    name: "Ken",
-    email: "email1@gmail.com",
-    createdAt: "10/10/2024",
-  },
-  {
-    key: "6",
-    name: "Ken",
-    email: "email1@gmail.com",
-    createdAt: "10/10/2024",
-  },
-  {
-    key: "7",
-    name: "Ken",
-    email: "email1@gmail.com",
+    key: "1",
+    title: "2nd post",
+    body: "2nd post body",
+    user: { name: "Ken", email: "Ken" },
+    comments: [
+      { body: "comment2" },
+      { body: "comment1" },
+      { body: "comment3" },
+    ],
     createdAt: "10/10/2024",
   },
 ];
 
 const columns = [
   {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    sorter: (a, b) => a.name - b.name,
+    title: "Title",
+    dataIndex: "title",
+    key: "title",
+    sorter: (a, b) => a.title - b.title,
   },
   {
-    title: "Email",
-    dataIndex: "email",
-    key: "email",
-    sorter: (a, b) => a.email - b.email,
+    title: "Body",
+    dataIndex: "body",
+    key: "body",
+    sorter: (a, b) => a.body - b.body,
+  },
+  {
+    title: "User",
+    dataIndex: "user",
+    key: "user",
+    render: (user) => <span>{user.name}</span>,
+    sorter: (a, b) => a.user.name - b.user.name,
+  },
+  {
+    title: "No Of Comments",
+    dataIndex: "comments",
+    key: "comment",
+    render: (comments) => <span>{comments.length}</span>,
+    sorter: (a, b) => a.user.name - b.user.name,
   },
   {
     title: "Created Date",
@@ -137,7 +134,7 @@ const Dashboard = () => {
           }}
         >
           <DashboardData
-            title={"user"}
+            title={"Posts"}
             columns={columns}
             dataSource={dataSource}
             onChange={onChange}

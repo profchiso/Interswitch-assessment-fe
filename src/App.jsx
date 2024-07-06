@@ -4,6 +4,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./features/users/components/Login";
 import Register from "./features/users/components/Register";
 import Dashboard from "./features/dashboard";
+import UserDashboard from "./features/dashboard/UserDashboard";
+import PostDashboard from "./features/dashboard/PostDashboard";
 import PrivateRoute from "./features/dashboard/common/PrivateRoute";
 import NotFound from "./features/notFound";
 
@@ -22,7 +24,7 @@ function InterswitchApp() {
           element={
             <PrivateRoute
               isAuthenticated={isAuthenticated}
-              element={Dashboard}
+              element={UserDashboard}
             />
           }
         />
@@ -32,7 +34,7 @@ function InterswitchApp() {
           element={
             <PrivateRoute
               isAuthenticated={isAuthenticated}
-              element={Dashboard}
+              element={PostDashboard}
             />
           }
         />
