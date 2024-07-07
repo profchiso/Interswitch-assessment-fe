@@ -53,9 +53,10 @@ const items = [
 ];
 const UserDashboard = (props) => {
   const [collapsed, setCollapsed] = useState(false);
+  const [fetchedUsers, setFetchedUsers] = useState([]);
   const { pathname } = useLocation();
 
-  const fetchusers = async () => {
+  const getUsers = async () => {
     const res = await fetch("http://localhost:5001/api/v1/users", {
       method: "GET",
       headers: {
@@ -64,20 +65,50 @@ const UserDashboard = (props) => {
       },
     });
     const users = await res.json();
-
-    return users;
+    setFetchedUsers(users.resource);
+    return users.resource;
   };
 
   const { data: users, isFetched } = useQuery({
     queryKey: ["users"],
-    queryFn: fetchusers,
+    queryFn: getUsers,
     staleTime: 60 * 1000,
   });
   useEffect(() => {
-    fetchusers();
+    getUsers();
   }, [users]);
 
-  const onSearch = (value, _e, info) => console.log(info?.source, value);
+  const searchUser = async (searchtext) => {
+    try {
+      const res = await fetch(
+        `http://localhost:5001/api/v1/users?search=${searchtext}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+      const users = await res.json();
+
+      setFetchedUsers(users.resource);
+
+      return users.resource;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onSearch = (value) => {
+    console.log(value);
+    searchUser(value);
+  };
+
+  const onSearchChange = (e) => {
+    console.log(e.target.value);
+    searchUser(e.target.value);
+  };
   const onChange = (pagination, filters, sorter, extra) => {
     console.log("params", pagination, filters, sorter, extra);
   };
@@ -120,9 +151,12 @@ const UserDashboard = (props) => {
             setIsAuthenticated={props.setIsAuthenticated}
             title={"Users"}
             columns={columns}
-            dataSource={isFetched ? users?.resource : []}
+            dataSource={isFetched ? fetchedUsers : []}
             onChange={onChange}
             onSearch={onSearch}
+            searchUser={searchUser}
+            setFetchedUsers={setFetchedUsers}
+            onSearchChnage={onSearchChange}
           />
         </Content>
 

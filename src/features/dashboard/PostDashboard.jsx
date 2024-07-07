@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { WechatOutlined, TeamOutlined } from "@ant-design/icons";
-import { Layout, Menu, Flex, Image, Row, Col } from "antd";
+import { Layout, Menu, Flex, Image, Row, Col, App } from "antd";
 import AuthFooter from "../users/components/common/Footer";
 import PostCard from "./PostCard";
 import Logout from "./common/Logout";
@@ -33,6 +33,7 @@ const items = [
   ),
 ];
 const PostDashboard = (props) => {
+  const { notification } = App.useApp();
   const [collapsed, setCollapsed] = useState(false);
 
   const { pathname } = useLocation();
@@ -45,9 +46,14 @@ const PostDashboard = (props) => {
         authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
       },
     });
+    if (res.status === 429) {
+      notification.error({
+        message: "Posts",
+        placement: "top",
+        description: res.statusText,
+      });
+    }
     const posts = await res.json();
-
-    console.log(posts);
 
     return posts?.resource;
   };
@@ -59,7 +65,7 @@ const PostDashboard = (props) => {
   } = useQuery({
     queryKey: ["posts"],
     queryFn: fetchPosts,
-    staleTime: 60 * 1000,
+    staleTime: 3 * 1000,
   });
   const chunkedDataSource = [];
   if (isFetched) {

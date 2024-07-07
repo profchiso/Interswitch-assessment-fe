@@ -10,6 +10,9 @@ const DashboardContent = ({
   onChange,
   onSearch,
   setIsAuthenticated,
+  searchUser,
+  setFetchedUsers,
+  onSearchChange,
 }) => {
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -38,6 +41,7 @@ const DashboardContent = ({
             enterButton
             size="large"
             onSearch={onSearch}
+            onChange={onSearchChange}
           />
         </div>
         <div>
