@@ -5,7 +5,6 @@ import { useLocation } from "react-router-dom";
 
 const AuthHeader = () => {
   const { pathname } = useLocation();
-  console.log("nave", pathname);
   return (
     <>
       <Flex

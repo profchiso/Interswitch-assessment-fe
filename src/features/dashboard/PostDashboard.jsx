@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { WechatOutlined, TeamOutlined } from "@ant-design/icons";
 import { Layout, Menu, Flex, Image, Row, Col } from "antd";
@@ -21,11 +21,21 @@ function getItem(label, key, icon, children) {
 }
 
 const items = [
-  getItem(<Link to={"/dashboard/users"}>Users</Link>, "1", <TeamOutlined />),
-  getItem(<Link to={"/dashboard/posts"}>posts</Link>, "2", <WechatOutlined />),
+  getItem(
+    <Link to={"/dashboard/users"}>Users</Link>,
+    "/dashboard/users",
+    <TeamOutlined />
+  ),
+  getItem(
+    <Link to={"/dashboard/posts"}>posts</Link>,
+    "/dashboard/posts",
+    <WechatOutlined />
+  ),
 ];
 const PostDashboard = (props) => {
   const [collapsed, setCollapsed] = useState(false);
+
+  const { pathname } = useLocation();
 
   const fetchPosts = async () => {
     const res = await fetch("http://localhost:5001/api/v1/posts", {
@@ -37,24 +47,30 @@ const PostDashboard = (props) => {
     });
     const posts = await res.json();
 
-    return posts;
+    console.log(posts);
+
+    return posts?.resource;
   };
 
-  const { data: posts, isFetched } = useQuery({
+  const {
+    data: posts,
+    isFetched,
+    isSuccess,
+  } = useQuery({
     queryKey: ["posts"],
     queryFn: fetchPosts,
+    staleTime: 60 * 1000,
   });
-  console.log(posts);
   const chunkedDataSource = [];
   if (isFetched) {
-    for (let i = 0; i < posts.resource.length; i += 4) {
-      chunkedDataSource.push(posts.resource.slice(i, i + 4));
+    for (let i = 0; i < posts?.length; i += 4) {
+      chunkedDataSource.push(posts.slice(i, i + 4));
     }
   }
+
   useEffect(() => {
     fetchPosts();
   }, [posts]);
-
   return (
     <Layout
       style={{
@@ -79,7 +95,7 @@ const PostDashboard = (props) => {
         </Flex>
         <Menu
           theme="dark"
-          defaultSelectedKeys={["1"]}
+          defaultSelectedKeys={[`${pathname}`]}
           mode="inline"
           items={items}
         />
@@ -95,15 +111,16 @@ const PostDashboard = (props) => {
             setIsAuthenticated={props.setIsAuthenticated}
           />
 
-          {chunkedDataSource.map((chunk, index) => (
-            <Row key={index} gutter={[16, 16]} style={{ margin: "16px 0" }}>
-              {chunk.map((post) => (
-                <Col key={post.key} className="gutter-row" span={6}>
-                  <PostCard key={post.key} post={post} />
-                </Col>
-              ))}
-            </Row>
-          ))}
+          {isSuccess &&
+            chunkedDataSource.map((chunk, index) => (
+              <Row key={index} gutter={[16, 16]} style={{ margin: "16px 0" }}>
+                {chunk.map((post) => (
+                  <Col key={post._id} className="gutter-row" span={6}>
+                    <PostCard key={post._id} post={post} />
+                  </Col>
+                ))}
+              </Row>
+            ))}
         </Content>
 
         <Footer

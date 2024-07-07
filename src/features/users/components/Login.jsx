@@ -49,9 +49,8 @@ const Login = ({ setIsAuthenticated }) => {
       });
       sessionStorage.setItem("isAuthenticated", true);
       sessionStorage.setItem("accessToken", jsonData.data.extra.accessToken);
+      sessionStorage.setItem("user", JSON.stringify(jsonData.data.resource));
       setIsAuthenticated(true);
-      // Logging for debugging
-      console.log("Navigating to /dashboard/users");
       navigate("/dashboard/users");
     } catch (error) {
       notification.error({
@@ -88,7 +87,8 @@ const Login = ({ setIsAuthenticated }) => {
           </Button>
         </Flex>
         <Flex>
-          Don&apos;t have an account? <Link to="/register">Register</Link>
+          Don&apos;t have an account? &nbsp;
+          <Link to="/register">Register</Link>
         </Flex>
       </Flex>
     </AuthLayout>

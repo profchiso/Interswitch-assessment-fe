@@ -5,11 +5,11 @@ import AuthHeader from "./Header";
 
 const layoutStyle = {
   display: "flex",
-  "justify-content": "center",
-  "align-items": "center",
+  justifyContent: "center",
+  alignItems: "center",
   height: "100vh",
   width: "100vw",
-  "background-color": "#D1D8C5",
+  backgroundColor: "#D1D8C5",
 };
 
 // eslint-disable-next-line react/prop-types

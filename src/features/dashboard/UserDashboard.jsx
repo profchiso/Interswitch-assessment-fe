@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { WechatOutlined, TeamOutlined } from "@ant-design/icons";
 import { Layout, Menu, Flex, Image } from "antd";
 import { useQuery } from "@tanstack/react-query";
@@ -40,11 +40,20 @@ function getItem(label, key, icon, children) {
 }
 
 const items = [
-  getItem(<Link to={"/dashboard/users"}>Users</Link>, "1", <TeamOutlined />),
-  getItem(<Link to={"/dashboard/posts"}>posts</Link>, "2", <WechatOutlined />),
+  getItem(
+    <Link to={"/dashboard/users"}>Users</Link>,
+    "/dashboard/users",
+    <TeamOutlined />
+  ),
+  getItem(
+    <Link to={"/dashboard/posts"}>posts</Link>,
+    "/dashboard/posts",
+    <WechatOutlined />
+  ),
 ];
 const UserDashboard = (props) => {
   const [collapsed, setCollapsed] = useState(false);
+  const { pathname } = useLocation();
 
   const fetchusers = async () => {
     const res = await fetch("http://localhost:5001/api/v1/users", {
@@ -60,9 +69,13 @@ const UserDashboard = (props) => {
   };
 
   const { data: users, isFetched } = useQuery({
-    queryKey: ["posts"],
+    queryKey: ["users"],
     queryFn: fetchusers,
+    staleTime: 60 * 1000,
   });
+  useEffect(() => {
+    fetchusers();
+  }, [users]);
 
   const onSearch = (value, _e, info) => console.log(info?.source, value);
   const onChange = (pagination, filters, sorter, extra) => {
@@ -92,7 +105,7 @@ const UserDashboard = (props) => {
         </Flex>
         <Menu
           theme="dark"
-          defaultSelectedKeys={["1"]}
+          defaultSelectedKeys={[`${pathname}`]}
           mode="inline"
           items={items}
         />

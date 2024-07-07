@@ -85,7 +85,7 @@ const Register = () => {
           </Button>
         </Flex>
         <Flex>
-          Already have an account? <Link to="/">Login</Link>
+          Already have an account? &nbsp; <Link to="/">Login</Link>
         </Flex>
       </Flex>
     </AuthLayout>
