@@ -104,7 +104,11 @@ const PostCard = ({ post }) => {
       >
         <p>{selectedPost.body}</p>
         <p>
-          <Input value={comment} onChange={(e) => setComment(e.target.value)} />
+          <Input
+            placeholder="type your comment"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          />
         </p>
         {comment && (
           <p>

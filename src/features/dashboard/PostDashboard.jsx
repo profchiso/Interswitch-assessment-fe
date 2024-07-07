@@ -1,9 +1,22 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { WechatOutlined, TeamOutlined } from "@ant-design/icons";
-import { Layout, Menu, Flex, Image, Row, Col, App } from "antd";
+
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { WechatOutlined, TeamOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  Layout,
+  Menu,
+  Flex,
+  Image,
+  Row,
+  Col,
+  App,
+  Input,
+  Modal,
+  Button,
+} from "antd";
+
 import AuthFooter from "../users/components/common/Footer";
 import PostCard from "./PostCard";
 import Logout from "./common/Logout";
@@ -27,18 +40,54 @@ const items = [
     <TeamOutlined />
   ),
   getItem(
-    <Link to={"/dashboard/posts"}>posts</Link>,
+    <Link to={"/dashboard/posts"}>Posts</Link>,
     "/dashboard/posts",
     <WechatOutlined />
   ),
 ];
+
 const PostDashboard = (props) => {
   const { notification } = App.useApp();
+  const queryClient = useQueryClient();
   const [collapsed, setCollapsed] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
 
   const { pathname } = useLocation();
 
-  const fetchPosts = async () => {
+  const handlePost = async () => {
+    const res = await fetch("http://localhost:5001/api/v1/posts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
+      },
+      body: JSON.stringify({ title, body }),
+    });
+    if (res.status === 429) {
+      notification.error({
+        message: "Posts",
+        placement: "top",
+        description: res.statusText,
+      });
+    }
+    const post = await res.json();
+    setIsOpen(false);
+    setTitle("");
+    setBody("");
+    queryClient.invalidateQueries("posts");
+
+    notification.success({
+      message: "Posts",
+      placement: "top",
+      description: post?.data?.msg,
+    });
+
+    return post?.resource;
+  };
+
+  const fetchPosts = useCallback(async () => {
     const res = await fetch("http://localhost:5001/api/v1/posts", {
       method: "GET",
       headers: {
@@ -56,7 +105,7 @@ const PostDashboard = (props) => {
     const posts = await res.json();
 
     return posts?.resource;
-  };
+  }, [notification]);
 
   const {
     data: posts,
@@ -67,6 +116,7 @@ const PostDashboard = (props) => {
     queryFn: fetchPosts,
     // staleTime: 3 * 1000,
   });
+
   const chunkedDataSource = [];
   if (isFetched) {
     for (let i = 0; i < posts?.length; i += 4) {
@@ -74,15 +124,37 @@ const PostDashboard = (props) => {
     }
   }
 
-  useEffect(() => {
-    fetchPosts();
-  }, [posts, fetchPosts]);
   return (
-    <Layout
-      style={{
-        minHeight: "100vh",
-      }}
-    >
+    <Layout style={{ minHeight: "100vh" }}>
+      <Modal
+        title={<p>Add Post</p>}
+        open={isOpen}
+        onCancel={() => setIsOpen(false)}
+        footer={""}
+      >
+        <p>
+          <Input
+            placeholder="Enter Post Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </p>
+
+        <p>
+          <Input
+            placeholder="Enter Post Body"
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+          />
+        </p>
+        {title && body && (
+          <p>
+            <Button type="primary" onClick={handlePost}>
+              Post
+            </Button>
+          </p>
+        )}
+      </Modal>
       <Sider
         collapsible
         collapsed={collapsed}
@@ -107,16 +179,18 @@ const PostDashboard = (props) => {
         />
       </Sider>
       <Layout>
-        <Content
-          style={{
-            margin: "16px ",
-          }}
-        >
+        <Content style={{ margin: "16px " }}>
           <Logout
             title={"Posts"}
             setIsAuthenticated={props.setIsAuthenticated}
           />
-
+          <div style={{ paddingTop: "16px" }}>
+            <PlusOutlined
+              size={"large"}
+              style={{ cursor: "pointer" }}
+              onClick={() => setIsOpen(true)}
+            />
+          </div>
           {isSuccess &&
             chunkedDataSource.map((chunk, index) => (
               <Row key={index} gutter={[16, 16]} style={{ margin: "16px 0" }}>
@@ -129,15 +203,12 @@ const PostDashboard = (props) => {
             ))}
         </Content>
 
-        <Footer
-          style={{
-            textAlign: "center",
-          }}
-        >
+        <Footer style={{ textAlign: "center" }}>
           <AuthFooter />
         </Footer>
       </Layout>
     </Layout>
   );
 };
+
 export default PostDashboard;
