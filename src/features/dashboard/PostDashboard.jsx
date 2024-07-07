@@ -65,7 +65,7 @@ const PostDashboard = (props) => {
   } = useQuery({
     queryKey: ["posts"],
     queryFn: fetchPosts,
-    staleTime: 3 * 1000,
+    // staleTime: 3 * 1000,
   });
   const chunkedDataSource = [];
   if (isFetched) {
@@ -76,7 +76,7 @@ const PostDashboard = (props) => {
 
   useEffect(() => {
     fetchPosts();
-  }, [posts]);
+  }, [posts, fetchPosts]);
   return (
     <Layout
       style={{

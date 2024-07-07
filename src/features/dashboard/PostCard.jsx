@@ -82,7 +82,7 @@ const PostCard = ({ post }) => {
 
     setComment("");
     setOpen(false);
-    queryClient.invalidateQueries({ queryKey: ["posts"] });
+    queryClient.invalidateQueries("posts");
 
     notification.success({
       message: "Comment",
