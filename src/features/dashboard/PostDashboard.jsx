@@ -3,7 +3,11 @@ import { useState, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { WechatOutlined, TeamOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  WechatOutlined,
+  TeamOutlined,
+  PlusCircleFilled,
+} from "@ant-design/icons";
 import {
   Layout,
   Menu,
@@ -86,27 +90,36 @@ const PostDashboard = (props) => {
       description: post?.data?.msg,
     });
 
-    return post?.resource;
+    return post?.data?.resource;
   };
 
   const fetchPosts = useCallback(async () => {
-    const res = await fetch("http://localhost:5001/api/v1/posts", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
-      },
-    });
-    if (res.status === 429) {
-      notification.error({
-        message: "Posts",
-        placement: "top",
-        description: res.statusText,
+    try {
+      const res = await fetch("http://localhost:5001/api/v1/posts", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
+        },
       });
-    }
-    const posts = await res.json();
+      if (res.status === 429) {
+        notification.error({
+          message: "Posts",
+          placement: "top",
+          description: res.statusText,
+        });
+      }
+      const posts = await res.json();
 
-    return posts?.resource;
+      return posts?.resource || posts?.data?.resource || [];
+    } catch (error) {
+      notification.error({
+        message: "Error",
+        placement: "top",
+        description: "Failed to fetch posts",
+      });
+      return [];
+    }
   }, [notification]);
 
   const {
@@ -188,7 +201,7 @@ const PostDashboard = (props) => {
             setIsAuthenticated={props.setIsAuthenticated}
           />
           <div style={{ paddingTop: "16px" }}>
-            <PlusOutlined
+            <PlusCircleFilled
               size={"large"}
               style={{ cursor: "pointer" }}
               onClick={() => setIsOpen(true)}
