@@ -11,7 +11,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 const { Meta } = Card;
-const PostCard = ({ post }) => {
+const PostCard = ({ post, refetchPost }) => {
   const { notification } = App.useApp();
   const queryClient = useQueryClient();
   const [selectedPost, setSelectedPost] = useState({});
@@ -34,6 +34,7 @@ const PostCard = ({ post }) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("posts");
+      refetchPost();
     },
     onError: (err) => {
       console.error(err);
@@ -63,6 +64,9 @@ const PostCard = ({ post }) => {
         return;
       }
 
+      queryClient.invalidateQueries("posts");
+      refetchPost();
+
       notification.error({
         message: "Delete Post",
         placement: "top",
@@ -88,7 +92,7 @@ const PostCard = ({ post }) => {
     setComment("");
     setOpen(false);
     queryClient.invalidateQueries("posts");
-
+    refetchPost();
     notification.success({
       message: "Comment",
       placement: "top",

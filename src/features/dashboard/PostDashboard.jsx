@@ -111,6 +111,7 @@ const PostDashboard = (props) => {
     data: posts,
     isFetched,
     isSuccess,
+    refetch: refetchPost,
   } = useQuery({
     queryKey: ["posts"],
     queryFn: fetchPosts,
@@ -197,7 +198,11 @@ const PostDashboard = (props) => {
               <Row key={index} gutter={[16, 16]} style={{ margin: "16px 0" }}>
                 {chunk.map((post) => (
                   <Col key={post._id} className="gutter-row" span={6}>
-                    <PostCard key={post._id} post={post} />
+                    <PostCard
+                      refetchPost={refetchPost}
+                      key={post._id}
+                      post={post}
+                    />
                   </Col>
                 ))}
               </Row>
