@@ -33,7 +33,7 @@ const PostCard = ({ post }) => {
       return handleDelete(post);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries("posts");
     },
     onError: (err) => {
       console.error(err);
