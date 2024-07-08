@@ -25,7 +25,7 @@ const Register = () => {
 
       return;
     }
-    const res = await fetch("http://localhost:5001/api/v1/users", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

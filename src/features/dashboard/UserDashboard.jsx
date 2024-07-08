@@ -57,7 +57,7 @@ const UserDashboard = (props) => {
   const { pathname } = useLocation();
 
   const getUsers = async () => {
-    const res = await fetch("http://localhost:5001/api/v1/users", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/users`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -81,7 +81,7 @@ const UserDashboard = (props) => {
   const searchUser = async (searchtext) => {
     try {
       const res = await fetch(
-        `http://localhost:5001/api/v1/users?search=${searchtext}`,
+        `${import.meta.env.VITE_API_URL}/users?search=${searchtext}`,
         {
           method: "GET",
           headers: {

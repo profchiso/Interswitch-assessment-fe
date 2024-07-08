@@ -61,7 +61,7 @@ const PostCard = ({ post, refetchPost }) => {
   const handleDelete = async (post) => {
     try {
       const res = await fetch(
-        `http://localhost:5001/api/v1/posts/${post._id}`,
+        `${import.meta.env.VITE_API_URL}/posts/${post._id}`,
         {
           method: "DELETE",
           headers: {
@@ -96,7 +96,7 @@ const PostCard = ({ post, refetchPost }) => {
     }
   };
   const handleComment = async () => {
-    const res = await fetch(`http://localhost:5001/api/v1/comments`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/comments`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -119,7 +119,7 @@ const PostCard = ({ post, refetchPost }) => {
   const handleEdit = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5001/api/v1/posts/${selectedPost._id}`,
+        `${import.meta.env.VITE_API_URL}/posts/${selectedPost._id}`,
         {
           method: "PATCH",
           headers: {

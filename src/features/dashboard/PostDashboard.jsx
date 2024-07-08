@@ -61,7 +61,7 @@ const PostDashboard = (props) => {
   const { pathname } = useLocation();
 
   const handlePost = async () => {
-    const res = await fetch("http://localhost:5001/api/v1/posts", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/posts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -95,7 +95,7 @@ const PostDashboard = (props) => {
 
   const fetchPosts = useCallback(async () => {
     try {
-      const res = await fetch("http://localhost:5001/api/v1/posts", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/posts`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
