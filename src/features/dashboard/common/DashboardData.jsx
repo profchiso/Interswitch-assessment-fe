@@ -10,8 +10,8 @@ const DashboardContent = ({
   onChange,
   onSearch,
   setIsAuthenticated,
-  searchUser,
-  setFetchedUsers,
+  // searchUser,
+  // setFetchedUsers,
   onSearchChange,
 }) => {
   const {

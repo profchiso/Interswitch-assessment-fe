@@ -189,6 +189,7 @@ const PostDashboard = (props) => {
               size={"large"}
               style={{ cursor: "pointer" }}
               onClick={() => setIsOpen(true)}
+              title="Add new post"
             />
           </div>
           {isSuccess &&

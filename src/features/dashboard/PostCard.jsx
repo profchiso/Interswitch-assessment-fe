@@ -54,7 +54,6 @@ const PostCard = ({ post }) => {
       );
       const posts = await res.json();
 
-      console.log(posts);
       if (posts.responseText === "FAIL") {
         notification.error({
           message: "Delete Post",
@@ -63,6 +62,12 @@ const PostCard = ({ post }) => {
         });
         return;
       }
+
+      notification.error({
+        message: "Delete Post",
+        placement: "top",
+        description: posts.data.msg,
+      });
 
       return posts;
     } catch (error) {
