@@ -16,8 +16,13 @@ const PostCard = ({ post, refetchPost }) => {
   const queryClient = useQueryClient();
   const [selectedPost, setSelectedPost] = useState({});
   const [open, setOpen] = useState(false);
+  const [isOpenUdate, setIsOpenUdate] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  const [loadingUpdate, setLoadingUpdate] = useState(true);
   const [comment, setComment] = useState("");
+  const [postTitle, setPostTitle] = useState("");
+  const [postBody, setPostBody] = useState("");
   const showLoading = (post) => {
     setSelectedPost(post);
     setOpen(true);
@@ -25,6 +30,18 @@ const PostCard = ({ post, refetchPost }) => {
 
     setTimeout(() => {
       setLoading(false);
+    }, 2000);
+  };
+
+  const showLoadingUpdate = (post) => {
+    setSelectedPost(post);
+    setIsOpenUdate(true);
+    setLoadingUpdate(true);
+    setPostTitle(post.title);
+    setPostBody(post.body);
+
+    setTimeout(() => {
+      setLoadingUpdate(false);
     }, 2000);
   };
 
@@ -99,8 +116,45 @@ const PostCard = ({ post, refetchPost }) => {
       description: postedComment.data.msg,
     });
   };
-  const handleEdit = (post) => {
-    console.log(post);
+  const handleEdit = async () => {
+    try {
+      const res = await fetch(
+        `http://localhost:5001/api/v1/posts/${selectedPost._id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
+          },
+          body: JSON.stringify({ title: postTitle, body: postBody }),
+        }
+      );
+      const postEdit = await res.json();
+
+      if (postEdit.responseText === "FAIL") {
+        notification.error({
+          message: "Edit Post",
+          placement: "top",
+          description: postEdit.errors[0].msg,
+        });
+        return;
+      }
+
+      queryClient.invalidateQueries("posts");
+      refetchPost();
+
+      setIsOpenUdate(false);
+
+      notification.success({
+        message: "Edit Post",
+        placement: "top",
+        description: postEdit.data.msg,
+      });
+
+      return postEdit;
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <>
@@ -128,6 +182,36 @@ const PostCard = ({ post, refetchPost }) => {
         )}
       </Modal>
 
+      <Modal
+        title={<p>Update Post</p>}
+        loading={loadingUpdate}
+        open={isOpenUdate}
+        onCancel={() => setIsOpenUdate(false)}
+        footer={""}
+      >
+        <p>
+          <Input
+            placeholder="type your comment"
+            value={postTitle}
+            onChange={(e) => setPostTitle(e.target.value)}
+          />
+        </p>
+        <p>
+          <Input
+            placeholder="type your comment"
+            value={postBody}
+            onChange={(e) => setPostBody(e.target.value)}
+          />
+        </p>
+        {postTitle && (
+          <p>
+            <Button type="primary" onClick={handleEdit}>
+              Update
+            </Button>
+          </p>
+        )}
+      </Modal>
+
       <Card
         style={{
           width: 240,
@@ -141,7 +225,7 @@ const PostCard = ({ post, refetchPost }) => {
             justifyContent: "flex-end",
             cursor: "pointer",
           }}
-          onClick={() => handleEdit(post)}
+          onClick={() => showLoadingUpdate(post)}
         >
           <EditOutlined title="Edit" />
         </div>
