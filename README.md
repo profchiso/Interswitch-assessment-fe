@@ -5,5 +5,6 @@ This template provides a minimal setup to get React working in Vite with HMR and
 Currently, two official plugins are available:
 
 - Clone the this repository
-- run `npm install` to install dependencies
-- run `npm run dev` to start the app
+- Run `npm install` to install dependencies
+- setup the `.env` as seen in the env.example.txt file
+- Run `npm run dev` to start the app
