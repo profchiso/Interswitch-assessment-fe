@@ -78,6 +78,8 @@ const PostDashboard = (props) => {
     setBody("");
     queryClient.invalidateQueries("posts");
 
+    refetchPost();
+
     notification.success({
       message: "Posts",
       placement: "top",
