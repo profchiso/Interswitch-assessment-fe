@@ -84,7 +84,7 @@ const PostCard = ({ post, refetchPost }) => {
       queryClient.invalidateQueries("posts");
       refetchPost();
 
-      notification.error({
+      notification.success({
         message: "Delete Post",
         placement: "top",
         description: posts.data.msg,
